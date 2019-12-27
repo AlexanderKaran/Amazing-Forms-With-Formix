@@ -1,0 +1,9 @@
+.custom-button {
+  min-height: 20px;
+  margin: 1rem 0 0.5rem 0;
+  border-radius: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 130%;
+}

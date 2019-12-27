@@ -1,0 +1,10 @@
+.custom-input {
+  padding: 0.375rem 15px;
+  min-height: 20px;
+  border-radius: 5px;
+  border: 1px solid grey;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 130%;
+}
