@@ -1,64 +1,104 @@
-import React, { useState } from "react";
+import React from "react";
+import PropTypes from "prop-types";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 
 // Custom Inputs
 import CustomInput from "./components/CustomInput";
-import CustomLabel from "./components/CustomLabel";
 import CustomButton from "./components/CustomButton";
+import CustomDropdown from "./components/CustomDropdown";
 
 import "./App.css";
 
-function App() {
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "" });
-
-  function handleValueChange(event) {
-    setForm({ ...form, [event.target.name]: event.target.value });
-  }
-
-  function onSubmut(event) {
-    event.preventDefault();
-    window.alert(
-      `You submitted the following user
-
-      Name: ${form.firstName} ${form.lastName}
-      Email: ${form.email}
-      `
-    );
-    setForm({ firstName: "", lastName: "", email: "" });
-  }
-
+function App({ savedUser }) {
   return (
     <div className="App">
       <div>
-        <form className="form-container" onSubmit={onSubmut}>
-          <CustomLabel htmlFor="userFirstName">First Name</CustomLabel>
-          <CustomInput
-            id="userFirstName"
-            name="firstName"
-            value={form.firstName}
-            onChange={handleValueChange}
-          />
+        <Formik
+          initialValues={savedUser}
+          validationSchema={Yup.object({
+            firstName: Yup.string()
+              .min(2, "First name must me more than two characters")
+              .required("First name is required"),
+            lastName: Yup.string()
+              .min(2, "Last name must me more than two characters")
+              .required("Last name is required"),
+            email: Yup.string()
+              .email("Invalid email address")
+              .required("Email is required"),
+            permission: Yup.object().shape({
+              label: Yup.string().required(),
+              value: Yup.string().required("Permission type is required")
+            })
+          })}
+          onSubmit={values => {
+            alert(`
+            Submitted User:
 
-          <CustomLabel htmlFor="userLastName">Last Name</CustomLabel>
-          <CustomInput
-            id="userLastName"
-            name="lastName"
-            value={form.lastName}
-            onChange={handleValueChange}
-          />
+            User: ${values.firstName} ${values.lastName}
+            Email: ${values.email}
+            Permission: ${values.permission.value}
+            `);
+          }}
+        >
+          {props => (
+            <Form>
+              <div className="form-container">
+                <CustomInput
+                  label="First Name"
+                  id="userFirstName"
+                  name="firstName"
+                  type="text"
+                />
 
-          <CustomLabel htmlFor="userEmail">Email</CustomLabel>
-          <CustomInput
-            id="userEmail"
-            name="email"
-            value={form.email}
-            onChange={handleValueChange}
-          />
+                <CustomInput
+                  label="Last Name"
+                  id="userLastName"
+                  name="lastName"
+                  type="text"
+                />
 
-          <CustomButton type="submit">Submit</CustomButton>
-        </form>
+                <CustomInput
+                  label="Email"
+                  id="userEmail"
+                  name="email"
+                  type="email"
+                />
+
+                <CustomDropdown
+                  label="User Permissions"
+                  id="userPermission"
+                  name="permission"
+                  type="text"
+                  options={[
+                    { value: "admin", label: "Admin Access" },
+                    { value: "normal", label: "Normal Access" }
+                  ]}
+                />
+
+                <CustomButton disabled={props.isSubmitting} type="submit">
+                  Submit
+                </CustomButton>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );
 }
+
+App.defaultProps = {
+  savedUser: {
+    firstName: "",
+    lastName: "",
+    email: "",
+    permission: { value: "", label: "" }
+  }
+};
+
+App.propTypes = {
+  savedUser: PropTypes.object
+};
 
 export default App;
